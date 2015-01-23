@@ -21,13 +21,13 @@ newtype InterpreterM a =
   deriving (Functor, Applicative, Monad, MonadIO
            , MonadState (M.Map T.Text ([Piece] -> InterpreterM [Piece])))
 
-runMarco :: T.Text -> [Piece] -> InterpreterM [Piece]
-runMarco name ps = do
+runMacro :: T.Text -> [Piece] -> InterpreterM [Piece]
+runMacro name ps = do
   res <- gets $ M.lookup name
   case res of
-   Just marco -> marco ps
+   Just macro -> macro ps
    Nothing -> return $ (ErrorPiece $
-                        "No marco \\" ++ T.unpack name
+                        "No macro \\" ++ T.unpack name
                         ++ " (deleted)"
                        ) : ps
 
