@@ -37,7 +37,7 @@ runPieces' (ErrorPiece err : ps) =
   liftIO (hPutStrLn stderr $ err) >> runPieces' ps
 runPieces' (TextPiece t : ps) = (TB.fromLazyText t <>) <$> runPieces' ps
 runPieces' (GroupPiece g : ps) = runPieces' (g ++ ps)
-runPieces' (CommandPiece cm : ps) = runMarco cm ps >>= runPieces'
+runPieces' (CommandPiece cm : ps) = runMacro cm ps >>= runPieces'
 
 runPieces :: ([Piece], [Token]) -> InterpreterM T.Text
 runPieces (ps, ts) = do
