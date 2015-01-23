@@ -74,9 +74,9 @@ defaultMap =
                               ++ "        " ++ show ps
                               ++ "\n    (command was deleted)") : ps ))
              , ("Define", (\ps ->
-                  case ps of
-                   CommandPiece cmd : GroupPiece body : xs ->
-                     xs <$ modify (M.insert cmd $ return . (body ++))
+                 case ps of
+                  CommandPiece cmd : GroupPiece body : xs ->
+                    xs <$ modify (M.insert cmd $ return . (body ++))
                    _ ->
                      return $ 
                      (ErrorPiece $
