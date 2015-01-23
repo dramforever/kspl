@@ -3,8 +3,10 @@ module Interpreter where
 
 import Control.Monad.State
 import Control.Applicative
+import Control.DeepSeq
 
 import qualified Data.Text.Lazy         as T
+import qualified Data.Text.Lazy.IO      as T
 import qualified Data.Text.Lazy.Builder as TB
 import           Data.Monoid
 import qualified Data.Map               as M
@@ -85,6 +87,33 @@ defaultMap =
                       ++ "but got:\n"
                       ++ "        " ++ show (take 2 ps)
                       ++ "\n    (command was deleted)") : ps))
+             , ("Include", (\ps ->
+                 case ps of
+                  GroupPiece [TextPiece fileName] : xs -> do
+                    contents <- liftIO $ withFile (T.unpack fileName) ReadMode
+                                (\h -> do
+                                    c <- T.hGetContents h
+                                    rnf c `seq` return c)
+                          
+                                                                       
+                    
+                    let (pieces, _) = parseTokens $ lexAll contents
+                    liftIO $ T.hPutStrLn stderr ("(<enter " <> fileName <> ">")
+                    return $ pieces
+                      ++ (CommandPiece "LeaveIncludedFile"
+                          : TextPiece fileName : xs)
+                      
+                  _ ->
+                    return $
+                     (ErrorPiece $
+                      "Bad arguments to \\Include\n"
+                      ++ "    Correct syntax: \\Include{fileName}, "
+                      ++ "but got:\n"
+                      ++ "        " ++ show (take 1 ps)
+                      ++ "\n    (command was deleted)") : ps))
+             , ("LeaveIncludedFile",
+                (\(TextPiece p:ps) -> do
+                    ps <$ (liftIO . T.putStrLn $ "<leave " <> p <> ">)")))
              ]
 
 execPieces :: ([Piece], [Token]) -> IO T.Text
