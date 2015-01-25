@@ -1,0 +1,13 @@
+\Include{std.kspl}
+
+\#{
+tag = \x. \y. <x>y</x>
+= \x. S (<x>) (K (</x>))
+= S (\x. S (<x>)) (\x. K (</x>))
+= S (S (K S) (C < >)) (S (K K) (C </ >))
+}
+\Define\tag{\S{\S{\K\S}{\C{<}{>}}}{\S{\K\K}{\C{</}{>}}}}
+
+\Define\p{\tag{p}}
+\Define\h1{\tag{h1}}
+\Define\h2{\tag{h2}}

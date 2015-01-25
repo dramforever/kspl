@@ -1,0 +1,8 @@
+\Define\#{\K{}} \#{The comment combinator!}
+
+\#{I x = x} \Define\I{}
+
+\#{B x y z = x (y z)} \Define\B{\S{\K\S}\K}
+\#{C x y z = x z y}   \Define\C{\S{\S{\K\S}{\S{\K\K}\S}}{\K\K}}
+\#{W x y = x y y}     \Define\W{\S\S{\S\K}}
+
