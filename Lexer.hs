@@ -37,13 +37,13 @@ lexer (T.uncons ->
    (t, remaining) -> Just (PlainText t, remaining)
 
 lexer (T.uncons -> Just ('\\',
-                         (T.uncons -> Just (h, remaining))
+                         T.uncons -> Just (h, remaining)
                         )) | not (isAlphaNum h) =
                                Just (Command (T.singleton h), remaining)
 
 lexer (T.uncons -> Just ('\\',
-                    (T.span isAlphaNum -> (cmd, remaining))
-                    )) = Just (Command cmd, remaining)
+                         T.span isAlphaNum -> (cmd, remaining)
+                        )) = Just (Command cmd, remaining)
 
 lexer (T.break isSpecialChar -> (text, remaining)) =
   Just (PlainText text, remaining)
