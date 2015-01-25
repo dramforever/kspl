@@ -1,7 +1,7 @@
 \Define\#{\K{}}
 
 \#{This is a comment}
-\#{Combinatory logic is fun!}
+\#{Combinatory calculus is fun!}
 
 \#{bracket = λx. λy. λz. xzy}
 \Define\bracket{\S{\S{\K\S}{\S{\K\K}\S}}{\K\K}}
