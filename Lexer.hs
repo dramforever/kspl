@@ -31,7 +31,7 @@ lexer (T.uncons -> Just ('}', remaining)) = Just (ClosingBrace, remaining)
 
 lexer (T.uncons ->
        Just ('\\', T.uncons ->
-             Just ('<', T.span isAlpha -> (h, re) ))) =
+             Just ('=', T.span isAlpha -> (h, re) ))) =
   
   case T.breakOn h re of
    (t, remaining) -> Just (PlainText t, remaining)
