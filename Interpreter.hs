@@ -42,14 +42,12 @@ runPieces' (GroupPiece g : ps) = runPieces' (g ++ ps)
 runPieces' (CommandPiece cm : ps) = runMacro cm ps >>= runPieces'
 
 runPieces :: ([Piece], [Token]) -> InterpreterM T.Text
-runPieces (ps, ts) = do
-  res <- runPieces' ps
-  case ts of
-   [] -> return ()
-   _:_ ->
-     liftIO (hPutStrLn stderr
-             ("Unconsumed tokens near " ++ show (take 5 ts)))
-  return (TB.toLazyText res)
+runPieces (ps, ts) =
+  let ps' = case ts of
+        [] -> ps
+        _:_ -> ErrorPiece ("Unconsumed tokens near " ++ show (take 5 ts))
+               : ps
+  in TB.toLazyText `fmap` runPieces' ps'
 
 defaultMap :: M.Map T.Text ([Piece] -> InterpreterM [Piece])
 defaultMap =
